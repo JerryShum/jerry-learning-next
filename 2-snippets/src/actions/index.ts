@@ -29,27 +29,36 @@ export async function createSnippet(
    const title = formData.get('title');
    const code = formData.get('code');
 
-   if (typeof title !== 'string' || title.length < 3) {
-      return {
-         message: 'Title must be longer.',
-      };
+   try {
+      if (typeof title !== 'string' || title.length < 3) {
+         return {
+            message: 'Title must be longer.',
+         };
+      }
+      if (typeof code !== 'string' || code.length < 10) {
+         return {
+            message: 'Code must be longer.',
+         };
+      }
+
+      // Create a new record in DB
+      await db.snippet.create({
+         data: {
+            title: title,
+            code: code,
+         },
+      });
+   } catch (error: unknown) {
+      if (error instanceof Error) {
+         return {
+            message: error.message,
+         };
+      } else {
+         return {
+            message: 'Oops. Something went wrong.',
+         };
+      }
    }
-   if (typeof code !== 'string' || code.length < 10) {
-      return {
-         message: 'Code must be longer.',
-      };
-   }
-
-   // Create a new record in DB
-   const snippet = await db.snippet.create({
-      data: {
-         title: title,
-         code: code,
-      },
-   });
-
-   console.log(snippet);
-
    // Automatically redirect to home page
    redirect('/');
 }
