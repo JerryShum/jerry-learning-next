@@ -1,30 +1,25 @@
+'use client';
 import { db } from '@/db';
 import { redirect } from 'next/navigation';
+import { useActionState, startTransition } from 'react';
+import * as actions from '@/actions';
 
 export default function SnippetCreatePage() {
-   async function createSnippet(formData: FormData) {
-      // This needs to be a server action
-      'use server';
-      // Check the user's inputs and make sure they're valid
-      const title = formData.get('title') as string;
-      const code = formData.get('code') as string;
+   const [formState, action] = useActionState(actions.createSnippet, {
+      message: '',
+   });
 
-      // Create a new record in DB
-      const snippet = await db.snippet.create({
-         data: {
-            title: title,
-            code: code,
-         },
+   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+      event.preventDefault();
+
+      const formData = new FormData(event.currentTarget);
+      startTransition(() => {
+         action(formData);
       });
-
-      console.log(snippet);
-
-      // Automatically redirect to home page
-      redirect('/');
    }
 
    return (
-      <form action={createSnippet}>
+      <form onSubmit={handleSubmit}>
          <h3 className="font-bold m-3">Create a Snippet</h3>
          <div className="flex flex-col gap-4">
             <div className="flex gap-4">
@@ -48,6 +43,8 @@ export default function SnippetCreatePage() {
                   id="code"
                />
             </div>
+
+            <div>{formState.message}</div>
 
             <button type="submit" className="rounded p-2 bg-blue-500">
                Create
