@@ -25,24 +25,31 @@ export async function createSnippet(
    formState: { message: string },
    formData: FormData
 ) {
-   return {
-      message: 'title must be longer.',
-   };
+   // ! Check if the user's inputs and make sure they're valid
+   const title = formData.get('title');
+   const code = formData.get('code');
 
-   // // Check the user's inputs and make sure they're valid
-   // const title = formData.get('title') as string;
-   // const code = formData.get('code') as string;
+   if (typeof title !== 'string' || title.length < 3) {
+      return {
+         message: 'Title must be longer.',
+      };
+   }
+   if (typeof code !== 'string' || code.length < 10) {
+      return {
+         message: 'Code must be longer.',
+      };
+   }
 
-   // // Create a new record in DB
-   // const snippet = await db.snippet.create({
-   //    data: {
-   //       title: title,
-   //       code: code,
-   //    },
-   // });
+   // Create a new record in DB
+   const snippet = await db.snippet.create({
+      data: {
+         title: title,
+         code: code,
+      },
+   });
 
-   // console.log(snippet);
+   console.log(snippet);
 
-   // // Automatically redirect to home page
-   // redirect('/');
+   // Automatically redirect to home page
+   redirect('/');
 }
