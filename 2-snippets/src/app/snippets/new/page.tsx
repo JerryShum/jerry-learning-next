@@ -1,8 +1,6 @@
 'use client';
-import { db } from '@/db';
-import { redirect } from 'next/navigation';
-import { useActionState, startTransition } from 'react';
 import * as actions from '@/actions';
+import { startTransition, useActionState } from 'react';
 
 export default function SnippetCreatePage() {
    const [formState, action] = useActionState(actions.createSnippet, {
