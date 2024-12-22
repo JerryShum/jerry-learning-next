@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth';
+import NextAuth, { Session, User } from 'next-auth';
 import GitHub from '@auth/core/providers/github';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { db } from '@/db';
@@ -26,9 +26,11 @@ export const {
    callbacks: {
       // usually not needed, we are fixing bug in nextauth
       //! The session function is called when verifying who a user is in the application
-      async session({ session, user }: any) {
+      async session({ session, user }: { session: Session; user: User }) {
          if (session && user) {
-            session.user.id = user.id;
+            if (session.user) {
+               session.user.id = user.id;
+            }
          }
 
          return session;
