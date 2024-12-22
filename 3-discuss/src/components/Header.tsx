@@ -1,65 +1,14 @@
-import { auth } from '@/auth';
 import {
    Navbar,
    NavbarBrand,
    NavbarContent,
    NavbarItem,
-   // NavbarMenuToggle,
-   // NavbarMenu,
-   // NavbarMenuItem,
 } from '@nextui-org/navbar';
-import {
-   Avatar,
-   Button,
-   Input,
-   Popover,
-   PopoverContent,
-   PopoverTrigger,
-} from '@nextui-org/react';
+import { Input } from '@nextui-org/react';
 import Link from 'next/link';
-import * as actions from '@/actions';
+import HeaderAuth from './HeaderAuth';
 
-export default async function Header() {
-   const session = await auth();
-
-   let authContent: React.ReactNode;
-
-   if (session?.user) {
-      authContent = (
-         <Popover placement="bottom">
-            <PopoverTrigger>
-               <Avatar src={session.user.image || ''} />
-            </PopoverTrigger>
-            <PopoverContent>
-               <div className="p-4">
-                  <form action={actions.signOut}>
-                     <button type="submit">Sign Out</button>
-                  </form>
-               </div>
-            </PopoverContent>
-         </Popover>
-      );
-   } else {
-      authContent = (
-         <>
-            <NavbarItem>
-               <form action={actions.signIn}>
-                  <Button type="submit" color="secondary" variant="bordered">
-                     Sign In
-                  </Button>
-               </form>
-            </NavbarItem>
-            <NavbarItem>
-               <form action={actions.signIn}>
-                  <Button type="submit" color="primary" variant="flat">
-                     Sign Up
-                  </Button>
-               </form>
-            </NavbarItem>
-         </>
-      );
-   }
-
+export default function Header() {
    return (
       <Navbar isBordered>
          <NavbarBrand>
@@ -72,7 +21,9 @@ export default async function Header() {
                <Input />
             </NavbarItem>
          </NavbarContent>
-         <NavbarContent justify="end">{authContent}</NavbarContent>
+         <NavbarContent justify="end">
+            <HeaderAuth />
+         </NavbarContent>
       </Navbar>
    );
 }
