@@ -21,16 +21,21 @@ export default function TopicCreateForm() {
                <div className="flex flex-col gap-4 p-4 w-80 justify-center">
                   <h3 className="text-lg">Create a Topic</h3>
                   <Input
-                     label="name"
+                     name="name"
+                     label="Name"
                      labelPlacement="outside"
                      placeholder="Name"
                   />
                   <Textarea
+                     name="description"
                      label="Description"
                      labelPlacement="outside"
                      placeholder="Describe your topic"
                   />
-                  <Button type="submit"> Submit</Button>
+                  <Button type="submit" color="primary" variant="ghost">
+                     {' '}
+                     <span className="text-md font-semibold">Submit</span>
+                  </Button>
                </div>
             </form>
          </PopoverContent>
