@@ -2,6 +2,12 @@
 
 import { z } from 'zod';
 import { auth } from '@/auth';
+import type { Topic } from '@prisma/client';
+import { redirect } from 'next/navigation';
+import { db } from '@/db';
+import paths from '@/paths';
+import { error } from 'console';
+import { revalidatePath } from 'next/cache';
 
 const createTopicSchema = z.object({
    name: z
@@ -48,9 +54,34 @@ export async function createTopic(
       };
    }
 
-   return {
-      errors: {},
-   };
+   let topic: Topic;
+   try {
+      //! Assigning topic variable to the values that we are defining here to send to the DB
+      topic = await db.topic.create({
+         data: {
+            slug: result.data.name,
+            description: result.data.description,
+         },
+      });
+   } catch (err: unknown) {
+      if (err instanceof Error) {
+         return {
+            errors: {
+               _form: [err.message],
+            },
+         };
+      } else {
+         return {
+            errors: {
+               _form: ['something went wrong.'],
+            },
+         };
+      }
+   }
 
    // TODO: Revalidate homepage after creating topic
+   revalidatePath('/');
+
+   //! Redirecting using the paths helper functions (/topics/slug) on successful creation of new topic
+   redirect(paths.topicShow(topic.slug));
 }
