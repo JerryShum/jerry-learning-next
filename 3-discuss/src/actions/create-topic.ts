@@ -1,6 +1,7 @@
 'use server';
 
 import { z } from 'zod';
+import { auth } from '@/auth';
 
 const createTopicSchema = z.object({
    name: z
@@ -16,6 +17,7 @@ interface CreateTopicFormState {
    errors: {
       name?: string[];
       description?: string[];
+      _form?: string[];
    };
 }
 
@@ -28,13 +30,21 @@ export async function createTopic(
       description: formData.get('description'),
    });
 
-   console.log(result);
-
    // If there was an error in the information we parsed (validation failed):
    if (!result.success) {
       console.log(result.error);
       return {
          errors: result.error.flatten().fieldErrors,
+      };
+   }
+
+   //! Ensure the user is authenticated/loggedin
+   const session = await auth();
+   if (!session || !session.user) {
+      return {
+         errors: {
+            _form: ['You must be signed in to create a new topic.'],
+         },
       };
    }
 
