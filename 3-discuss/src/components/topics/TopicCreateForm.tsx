@@ -9,16 +9,14 @@ import {
    PopoverTrigger,
    PopoverContent,
    Form,
-   form,
 } from '@nextui-org/react';
+import FormButton from '@/components/common/FormButton';
 import * as actions from '@/actions';
 
 export default function TopicCreateForm() {
-   const [formState, action] = useActionState(actions.createTopic, {
+   const [formState, action, isPending] = useActionState(actions.createTopic, {
       errors: {},
    });
-
-   console.log(formState);
 
    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
       event.preventDefault();
@@ -68,9 +66,7 @@ export default function TopicCreateForm() {
                      </div>
                   ) : null}
 
-                  <Button type="submit" color="primary" variant="ghost">
-                     <span className="text-md font-semibold">Submit</span>
-                  </Button>
+                  <FormButton isLoading={isPending}>Submit Topic</FormButton>
                </div>
             </Form>
          </PopoverContent>
