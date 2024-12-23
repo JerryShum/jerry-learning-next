@@ -13,10 +13,17 @@ import { startTransition, useActionState } from 'react';
 import * as actions from '@/actions';
 import FormButton from '@/components/common/FormButton';
 
-export default function PostsCreateForm() {
-   const [formState, action, isPending] = useActionState(actions.createPost, {
-      errors: {},
-   });
+interface PostCreateFormProps {
+   slug: string;
+}
+
+export default function PostsCreateForm({ slug }: PostCreateFormProps) {
+   const [formState, action, isPending] = useActionState(
+      actions.createPost.bind(null, slug),
+      {
+         errors: {},
+      }
+   );
 
    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
       event.preventDefault();
