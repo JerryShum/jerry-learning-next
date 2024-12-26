@@ -3,3 +3,4 @@ export { createPost } from './create-post';
 export { createTopic } from './create-topic';
 export { signIn } from './signIn';
 export { signOut } from './signOut';
+export { search } from './search';
