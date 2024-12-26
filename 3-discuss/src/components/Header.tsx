@@ -4,7 +4,6 @@ import {
    NavbarContent,
    NavbarItem,
 } from '@nextui-org/navbar';
-import { Input } from '@nextui-org/react';
 import Link from 'next/link';
 import HeaderAuth from './HeaderAuth';
 import SearchInput from './SearchInput';
